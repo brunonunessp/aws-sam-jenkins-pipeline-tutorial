@@ -1,6 +1,8 @@
 pipeline {
   agent any
  
+  stages {
+  
     stage('Build') {
       steps {
         unstash 'venv'
@@ -14,7 +16,7 @@ pipeline {
         S3_BUCKET = 'deploy-app-aws'
       }
       steps {
-        withAWS(credentials: 'deploy-aws', region: 'us-west-2') {
+        withAWS(credentials: 'sam-jenkins-demo-credentials', region: 'us-west-2') {
           unstash 'venv'
           unstash 'aws-sam'
           sh 'venv/bin/sam deploy --stack-name $STACK_NAME -t template.yaml --s3-bucket $S3_BUCKET --capabilities CAPABILITY_IAM'
@@ -31,7 +33,7 @@ pipeline {
         S3_BUCKET = 'deploy-app-aws'
       }
       steps {
-        withAWS(credentials: 'deploy-aws', region: 'us-east-1') {
+        withAWS(credentials: 'sam-jenkins-demo-credentials', region: 'us-east-1') {
           unstash 'venv'
           unstash 'aws-sam'
           sh 'venv/bin/sam deploy --stack-name $STACK_NAME -t template.yaml --s3-bucket $S3_BUCKET --capabilities CAPABILITY_IAM'
